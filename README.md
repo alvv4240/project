@@ -1,2 +1,2 @@
-# project
-a place we can work together
+# Project IaC
+Tracking our IAC YAML
