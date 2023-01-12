@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+  Generator: "former2"
+Description: ""
+Resources:
+  LambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Description: "An Amazon S3 trigger that retrieves metadata for the object that has been updated."
+      FunctionName: "lambda-s3-function"
+      Handler: "index.handler"
+      Architectures: 
+      - "x86_64"
+      Code: 
+        S3Bucket: !Sub "awslambda-${AWS::Region}-tasks"
+        S3Key: !Sub "/snapshots/${AWS::AccountId}/lambda-s3-function-b097897c-7909-4a0f-9d9d-bdbbdd4b748e"
+        S3ObjectVersion: "KLDgbwwJThyBtmB0Zs9n7T4NVf2vAITx"
+      MemorySize: 128
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-role/lambda-s3-function-role"
+      Runtime: "nodejs14.x"
+      Timeout: 3
+      TracingConfig: 
+        Mode: "PassThrough"
+      EphemeralStorage: 
+        Size: 512
+      Tags: 
+      - 
+        Key: "lambda-console:blueprint"
+        Value: "s3-get-object"
+
+  LambdaFunction2:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Description: ""
+      FunctionName: "FlashCards-Lambda-Deploy"
+      Handler: "lambda_function.lambda_handler"
+      Architectures: 
+      - "x86_64"
+      Code: 
+        S3Bucket: !Sub "awslambda-${AWS::Region}-tasks"
+        S3Key: !Sub "/snapshots/${AWS::AccountId}/FlashCards-Lambda-Deploy-bb9cb19f-c855-4e57-9b49-94bde3295414"
+        S3ObjectVersion: "FB30R9Jpeotuok5z9UyB9DJeHYFn0b3U"
+      MemorySize: 128
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-role/FlashCards-Lambda-Deploy-role-f3wvciqr"
+      Runtime: "python3.9"
+      Timeout: 3
+      TracingConfig: 
+        Mode: "PassThrough"
+      EphemeralStorage: 
+        Size: 512
+
+  LambdaFunction3:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Description: ""
+      FunctionName: "test"
+      Handler: "lambda_function.lambda_handler"
+      Architectures: 
+      - "x86_64"
+      Code: 
+        S3Bucket: !Sub "awslambda-${AWS::Region}-tasks"
+        S3Key: !Sub "/snapshots/${AWS::AccountId}/test-a28a3908-f177-4736-9fee-1cce2896a1df"
+        S3ObjectVersion: "6mPXdpXTGG62nAMXNpEINup8IZPfEQao"
+      MemorySize: 128
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-role/FlashCards-Lambda-Refresh-role-gp6ylvoi"
+      Runtime: "python3.9"
+      Timeout: 3
+      TracingConfig: 
+        Mode: "PassThrough"
+      EphemeralStorage: 
+        Size: 512
+
+  LambdaFunction4:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Description: ""
+      FunctionName: "flashcards-s3-trigger"
+      Handler: "index.handler"
+      Architectures: 
+      - "x86_64"
+      Code: 
+        S3Bucket: !Sub "awslambda-${AWS::Region}-tasks"
+        S3Key: !Sub "/snapshots/${AWS::AccountId}/flashcards-s3-trigger-95a0b163-f77b-4ca1-8621-6cb93f707435"
+        S3ObjectVersion: "D7t6MMuDg73vom5I_Nymu1c4P_TzvQ6T"
+      MemorySize: 128
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-role/s3trigger"
+      Runtime: "nodejs16.x"
+      Timeout: 3
+      TracingConfig: 
+        Mode: "PassThrough"
+      EphemeralStorage: 
+        Size: 512
+
+  LambdaFunction5:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Description: "An Amazon S3 trigger that retrieves metadata for the object that has been updated."
+      FunctionName: !Sub "${LambdaFunction}-p"
+      Handler: "lambda_function.lambda_handler"
+      Architectures: 
+      - "x86_64"
+      Code: 
+        S3Bucket: !Sub "awslambda-${AWS::Region}-tasks"
+        S3Key: !Sub "/snapshots/${AWS::AccountId}/${LambdaFunction}-p-8ffa9568-d38e-4274-8230-5fe7257a0414"
+        S3ObjectVersion: "nHrZtSYYk7YK1C2ytVpY2kcesfrP3_Kx"
+      MemorySize: 128
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-role/${LambdaFunction}-p-role"
+      Runtime: "python3.7"
+      Timeout: 3
+      TracingConfig: 
+        Mode: "PassThrough"
+      EphemeralStorage: 
+        Size: 512
+      Tags: 
+      - 
+        Key: "lambda-console:blueprint"
+        Value: "s3-get-object-python"
+
+  LambdaVersion:
+    Type: "AWS::Lambda::Version"
+    Properties:
+      Description: "An Amazon S3 trigger that retrieves metadata for the object that has been updated."
+      FunctionName: !Ref LambdaFunction
+
+  LambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt LambdaFunction2.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:codestar-notifications-FlashCards"
+
+  LambdaPermission2:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt LambdaFunction4.Arn
+      Principal: "s3.amazonaws.com"
+      SourceArn: "arn:aws:s3:::prod-bucket-team1"
+
